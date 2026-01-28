@@ -47,3 +47,5 @@ def get_cifar10_data():
     x_test, y_test = preprocess_cifar10(x_test, y_test)
 
     return x_train, y_train, x_test, y_test
+
+
