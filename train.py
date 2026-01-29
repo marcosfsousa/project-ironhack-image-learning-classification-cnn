@@ -1,6 +1,6 @@
 # train.py
 import config
-from keras.callbacks import EarlyStopping, LearningRateScheduler
+from keras.callbacks import EarlyStopping
 from keras.optimizers import SGD, Adam
 
 
@@ -18,7 +18,7 @@ def train_model(model, x_train, y_train, batch_size, epochs):
     
     early_stopping = EarlyStopping(
         monitor="val_loss",
-        patience=10,      # increased to allow LR Scheduler to take effect
+        patience=3,      
         restore_best_weights=True
     )
 
@@ -28,6 +28,7 @@ def train_model(model, x_train, y_train, batch_size, epochs):
         batch_size=batch_size,
         epochs=epochs,
         validation_split=0.1,
+        callbacks=[early_stopping]
     )
     return history
 
