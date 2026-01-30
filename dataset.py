@@ -1,5 +1,7 @@
+import config 
+import tensorflow as tf
 from keras.datasets import cifar10
-import numpy as np
+from sklearn.model_selection import train_test_split
 
 
 def load_cifar10():
@@ -48,4 +50,21 @@ def get_cifar10_data():
 
     return x_train, y_train, x_test, y_test
 
+
+def get_cifar10_datasets(batch_size, val_split=0.1):
+    x_train, y_train, x_test, y_test = get_cifar10_data()
+
+    x_train, x_val, y_train, y_val = train_test_split(
+        x_train, y_train, test_size=val_split, random_state=config.RANDOM_SEED
+    )
+
+    train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    val_ds = tf.data.Dataset.from_tensor_slices((x_val, y_val))
+    test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test))
+
+    train_ds = train_ds.shuffle(10000).batch(batch_size).prefetch(tf.data.AUTOTUNE)
+    val_ds = val_ds.batch(batch_size).prefetch(tf.data.AUTOTUNE)
+    test_ds = test_ds.batch(batch_size).prefetch(tf.data.AUTOTUNE)
+
+    return train_ds, val_ds, test_ds
 

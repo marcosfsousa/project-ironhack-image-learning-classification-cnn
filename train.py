@@ -1,37 +1,41 @@
 # train.py
-import config
-from keras.callbacks import EarlyStopping
-from keras.optimizers import SGD, Adam
+from keras.optimizers import Adam
 
-
-def compile_model(model):
-    optimizer = Adam(learning_rate=config.LEARNING_RATE)
+def compile_model(model, lr):
+    optimizer = Adam(learning_rate=lr)
 
     model.compile(
         optimizer=optimizer,
         loss="SparseCategoricalCrossentropy",
-        metrics=["accuracy"],
-    )
-    return model
-
-def train_model(model, x_train, y_train, batch_size, epochs):
-    
-    early_stopping = EarlyStopping(
-        monitor="val_loss",
-        patience=3,      
-        restore_best_weights=True
+        metrics=["accuracy"]
     )
 
-    history = model.fit(
-        x_train,
-        y_train,
-        batch_size=batch_size,
-        epochs=epochs,
-        validation_split=0.1,
-        callbacks=[early_stopping]
-    )
-    return history
+def train_model(
+    model,
+    train_data,
+    val_data,
+    compile_fn,
+    phases
+):
+    histories = {}
 
-def evaluate_model(model, x_test, y_test):
-    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-    return loss, accuracy
+    for phase in phases:
+        if "set_trainable" in phase:
+            phase["set_trainable"](model)
+
+        compile_fn(
+            model,
+            lr=phase["learning_rate"])
+
+        callbacks = phase.get("base_callbacks", []) + phase.get("callbacks", [])
+
+        history = model.fit(
+            train_data,
+            validation_data=val_data,
+            epochs=phase["epochs"],
+            callbacks=callbacks
+        )
+
+        histories[phase["name"]] = history
+
+    return histories
