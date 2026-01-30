@@ -1,3 +1,11 @@
+
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+import tensorflow as tf
+from tensorflow.keras.losses import sparse_categorical_crossentropy
+from config import LEARNING_RATE
+
+
+    
 # train.py
 import config
 from keras.callbacks import EarlyStopping
