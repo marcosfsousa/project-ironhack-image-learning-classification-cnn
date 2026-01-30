@@ -3,3 +3,5 @@ tensorflow>=2.15
 numpy
 matplotlib
 seaborn
+pandas
+sklearn
