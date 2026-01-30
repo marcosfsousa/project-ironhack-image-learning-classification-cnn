@@ -68,6 +68,21 @@ The project is organized this way to keep experiments clean and easy to extend.
 We delivered a trained model, evaluation metrics, an experiment notebook, and a group presentation
 Also included a Excel file where we tracked different preprocessing, architecture decisions for each model.
 
+For model evaluation purposes our trained model can be found here -> [Download model](https://github.com/marcosfsousa/project-ironhack-image-learning-classification-cnn/releases/download/model/model_v9_vgg16_finetuned.keras)
+
+---
+
+## Reproducing Model Evaluation
+
+To reproduce evaluation results for a saved `.keras` model:
+
+1. Load the model using the specified code cell in `main.ipynb`
+2. Run the Load Data cell
+2. Do NOT rebuild or recompile the model
+3. Evaluate using `evaluate_model(model, test_ds)` and `predict_classes(model, test_ds)`
+
+Rebuilding or recompiling the model will reset learned weights.
+
 ---
 
 ## Methodology
