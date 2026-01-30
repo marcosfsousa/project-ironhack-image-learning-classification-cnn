@@ -66,6 +66,7 @@ The project is organized this way to keep experiments clean and easy to extend.
 ## Deliverables
 
 We delivered a trained model, evaluation metrics, an experiment notebook, and a group presentation
+Also included a Excel file where we tracked different preprocessing, architecture decisions for each model.
 
 ---
 
@@ -77,5 +78,20 @@ We started with a baseline CNN, iteratively improved the architecture, tuned hyp
 
 ## Results
   
-Final accuracy, training curves, and confusion matrices are documented in main.ipynb. The final model showed steady improvement and generalization.
+Final accuracy, training curves, and confusion matrices are reported in `main.ipynb`.
+
+**Model Performance**
+- Baseline scratch CNN test accuracy: ~58–60%
+- Best scratch CNN after architectural tuning: ~77%
+- Transfer learning with VGG16: ~87% test accuracy
+
+**Observations**
+- Transfer learning provides a significant performance gain over scratch models
+- Results are consistent with known CIFAR-10 benchmarks given 32×32 image resolution
+- Performance plateaus align with expected dataset difficulty limits
+
+**Error Analysis**
+- Animal classes (cat, dog, deer) are harder to distinguish due to texture similarity
+- Vehicle classes (truck, automobile, ship) achieve higher accuracy due to strong shape cues
+- Misclassifications follow semantic similarity rather than random noise
 
