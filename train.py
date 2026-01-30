@@ -1,18 +1,26 @@
 
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
-from keras.optimizers import Adam
+import tensorflow as tf
+from tensorflow.keras.losses import sparse_categorical_crossentropy
+from config import LEARNING_RATE
 
 
-
+    
 # train.py
+
 def compile_model(model):
+    optimizer = tf.keras.optimizers.SGD(
+        learning_rate=LEARNING_RATE, 
+        momentum=0.9,
+        nesterov=True
+    )
     model.compile(
-        optimizer=Adam(learning_rate=3e-4), #changed from adam to Adam(learning_rate=1e-3) for better control over learning rate should start at 0.001
-        loss="SparseCategoricalCrossentropy",
-        metrics=["accuracy"],
+        optimizer=optimizer, #changed from adam to Adam(learning_rate=1e-3) for better control over learning rate should start at 0.001
+        loss=sparse_categorical_crossentropy,
+        metrics=["accuracy"]
     )
     return model
-                           #changed from 'sgd' to Adam adapts the learning rate
+                           #changed from Adam to SGD (momentum + Nesterov) adapts the learning rate
                            # each parameter individually, allowing the model to 
                            #converge faster and achieve better early accuracy than
                            #standard SGD, especially on datasets like CIFAR-10 with small CNNs.
@@ -28,9 +36,10 @@ lr_scheduler = ReduceLROnPlateau(
     
 def train_model(model, x_train, y_train, batch_size, epochs):
     early_stop = EarlyStopping(
-    monitor="val_loss",
-        patience=8,
-        restore_best_weights=True,
+    monitor="val_accuracy",
+    patience=10,
+    restore_best_weights=True,
+    verbose=1,
     )
 
     history = model.fit(
@@ -40,6 +49,7 @@ def train_model(model, x_train, y_train, batch_size, epochs):
         epochs=epochs,
         validation_split=0.1,
         callbacks=[lr_scheduler, early_stop],
+        verbose=1,
     )
     return history
 
